@@ -53,3 +53,4 @@ public class JwtAuthenticationController {
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
 }
+
