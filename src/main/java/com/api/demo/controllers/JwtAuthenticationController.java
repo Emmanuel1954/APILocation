@@ -2,6 +2,7 @@ package com.api.demo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,22 +36,29 @@ public class JwtAuthenticationController {
 	)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest, @RequestHeader("APIkey") String APIKey )
 			throws Exception {
-		System.out.println("********************************************************************");
-		System.out.println("authenticationRequest.getUsername():["+authenticationRequest.getUsername()+"]");
-		System.out.println("authenticationRequest.getPassword():["+authenticationRequest.getPassword()+"]");
-		System.out.println("APIKey:["+APIKey+"]");
-		System.out.println("********************************************************************");
-		Usuario user = UsuarioServiceImp.findByUsernameANDAPIKey(authenticationRequest.getUsername(), APIKey);
-		final UserDetails userDetails = jwtInMemoryUserDetailsService
-				//.loadUserByUsername(authenticationRequest.getUsername());
-				.loadUserByUsername(user.getId().getLogin());
-		//final String token = jwtAuthtenticationConfig.getJWTToken(userDetails.getUsername());
-		final String token = jwtAuthtenticationConfig.getJWTToken(user.getId().getLogin());
-		System.out.println("********************************************************************");
-		System.out.println("token:["+token+"]");
-		System.out.println("********************************************************************");
-		//return ResponseEntity.ok(new JwtResponse(token, user.getId().getLogin(), user.getPassword()));
-		return ResponseEntity.ok(new JwtResponse(token));
+		if (authenticationRequest.getPassword().equals(UsuarioServiceImp.findByUsernameANDAPIKey(authenticationRequest.getUsername(), APIKey).getPassword())){
+			System.out.println("********************************************************************");
+			System.out.println("authenticationRequest.getUsername():[" + authenticationRequest.getUsername() + "]");
+			System.out.println("authenticationRequest.getPassword():[" + authenticationRequest.getPassword() + "]");
+			System.out.println("APIKey:[" + APIKey + "]");
+			System.out.println("********************************************************************");
+			Usuario user = UsuarioServiceImp.findByUsernameANDAPIKey(authenticationRequest.getUsername(), APIKey);
+			final UserDetails userDetails = jwtInMemoryUserDetailsService
+					//.loadUserByUsername(authenticationRequest.getUsername());
+					.loadUserByUsername(user.getId().getLogin());
+			//final String token = jwtAuthtenticationConfig.getJWTToken(userDetails.getUsername());
+			final String token = jwtAuthtenticationConfig.getJWTToken(user.getId().getLogin());
+			System.out.println("********************************************************************");
+			System.out.println("token:[" + token + "]");
+			System.out.println("********************************************************************");
+			System.out.println(user.getId().getLogin());
+			//return ResponseEntity.ok(new JwtResponse(token, user.getId().getLogin(), user.getPassword()));
+			return ResponseEntity.ok(new JwtResponse(token));
+		}else{
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+		}
+
+
 	}
 }
 

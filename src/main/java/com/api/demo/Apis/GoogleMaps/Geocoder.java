@@ -10,11 +10,11 @@ import java.time.Duration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-/* 
+
 public class Geocoder {
 
 	private static final String GEOCODING_RESOURCE = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?fields=all&inputtype=textquery&key=";
-    private static final String API_KEY = "AIzaSyBt7SBw_rUCg6MHb3rqrxopHSMJwMIdvoA";
+    private static final String API_KEY = "AIzaSyDRjecIOpRLLTJoZddex3jGqm4yPAQTft0";
 
     public Geocoder() {
     	
@@ -40,4 +40,4 @@ public class Geocoder {
         String longitud = items.get(0).get("geometry").get("location").get("lng").asText();
         return latitud + "," + longitud;
     }
-} */
+}

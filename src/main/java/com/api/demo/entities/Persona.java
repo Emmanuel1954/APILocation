@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Persona {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
     private String primerNombre;
     private String segundoNombre;
     private String primerApellido;
@@ -21,6 +21,7 @@ public class Persona {
     private LocalDate fechaNacimiento;
     private Integer edad;
     private String edadClinica;
+    private String ubicacion;
 
     @OneToOne(mappedBy = "persona", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore // esto es para que no se generen referencia cirular entre las entidades
@@ -28,11 +29,11 @@ public class Persona {
 
     // Getters y setters
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -115,5 +116,9 @@ public class Persona {
             this.edad = periodo.getYears();
             this.edadClinica = String.format("%d años %d meses %d días", periodo.getYears(), periodo.getMonths(), periodo.getDays());
         }
+    }
+
+    public String getUbicacion() {
+        return ubicacion;
     }
 }

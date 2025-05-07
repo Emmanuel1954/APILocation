@@ -1,5 +1,6 @@
 package com.api.demo.Componet;
-/* 
+
+import com.api.demo.repositories.PersonaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import com.api.demo.Apis.GoogleMaps.Geocoder;
 import com.api.demo.entities.Coordenadas;
 import com.api.demo.entities.Persona;
 import com.api.demo.repositories.CoordenadasRepository;
-import com.PPOOII.Laboratorio.Repository.PersonaRepository;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -22,7 +23,6 @@ public class ScheduledTasks {
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     // ========= INYECCIÓN DE DEPENDENCIAS ==========
  	@Autowired
- 	@Qualifier("IPersonaRepository")
  	private PersonaRepository IPersonaRepository;
  	
  	@Autowired
@@ -52,12 +52,12 @@ public class ScheduledTasks {
     }
 
     
-    @Scheduled(cron = "*//*30 * * * * ?")
+    @Scheduled(cron = "*/30 *  * * * ?")
     public void scheduleTaskWithCronExpression() {
         logger.info("Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
         try
         {
-        	List<Persona> listPersonas = IPersonaRepository.getPersonas();
+        	List<Persona> listPersonas = IPersonaRepository.findAll();
         	if(listPersonas !=null) {
         		if(listPersonas.size()>0) {
         			Geocoder geocoder = new Geocoder();
@@ -67,13 +67,13 @@ public class ScheduledTasks {
         				String[] coor = LatLng.split(",");
                     	logger.info(LatLng + " - {}", dateTimeFormatter.format(LocalDateTime.now()));
                     	
-                    	coorXper = ICoordenadaRepository.getCoordenadaXPersona(persona.id);
+                    	coorXper = ICoordenadaRepository.getCoordenadaXPersona(persona.getId());
                     	if(coorXper == null) {
-                    		ICoordenadaRepository.save(new Coordenadas(persona.id, persona.getPnombre(), 
+                    		ICoordenadaRepository.save(new Coordenadas(persona.getId(), persona.getPrimerNombre(),
 									Double.parseDouble(coor[0].toString()),
 									Double.parseDouble(coor[1].toString())));
                     	}else if(coorXper.id>0) {
-                    		ICoordenadaRepository.save(new Coordenadas(coorXper.id,persona.id, persona.getPnombre(), 
+                    		ICoordenadaRepository.save(new Coordenadas(coorXper.id,persona.getId(), persona.getPrimerNombre(),
 									Double.parseDouble(coor[0].toString()),
 									Double.parseDouble(coor[1].toString())));
                     	}
@@ -85,4 +85,4 @@ public class ScheduledTasks {
         	System.out.println(e.getMessage());
 		}
     }
-} */
+}

@@ -1,5 +1,5 @@
 package com.api.demo.entities;
-/* 
+
 import java.io.Serializable;
 
 import jakarta.persistence.Column;
@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity(name="COOR")
-@Table(name = "Coordenadas", schema = "PPOOII")
+@Table(name = "Coordenadas" )
 public class Coordenadas implements Serializable{
 	private static final long serialVersionUID = 1L;
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -84,4 +84,4 @@ public class Coordenadas implements Serializable{
 	}
 	
 	
-} */
+}

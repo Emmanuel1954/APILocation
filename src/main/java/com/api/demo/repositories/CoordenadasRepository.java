@@ -1,5 +1,5 @@
 package com.api.demo.repositories;
-/* *
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,5 +18,5 @@ public interface CoordenadasRepository extends JpaRepository<Coordenadas, Intege
 	public abstract Page<Coordenadas> findAll(Pageable pageable);
 	
 	@Query("SELECT coord FROM COOR coord WHERE coord.persona = :id_persona ")
-	public abstract Coordenadas getCoordenadaXPersona(@Param("id_persona") int persona);
-}*/
+	public abstract Coordenadas getCoordenadaXPersona(@Param("id_persona") long persona);
+}

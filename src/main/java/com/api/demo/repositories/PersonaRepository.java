@@ -10,6 +10,10 @@ import java.util.Optional;
 @Repository
 public interface PersonaRepository extends JpaRepository<Persona, Long> {
     Optional<Persona> findByNumeroIdentificacion(String numeroIdentificacion);
+
+    @Override
+    List<Persona> findAll();
+
     List<Persona> findByEdad(Integer edad);
     List<Persona> findByPrimerApellidoIgnoreCase(String primerApellido);
     List<Persona> findByPrimerNombreIgnoreCase(String primerNombre);
