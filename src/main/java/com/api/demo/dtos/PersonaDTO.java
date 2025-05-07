@@ -8,7 +8,7 @@ public class PersonaDTO {
     private String segundoApellido;
     private String numeroIdentificacion;
     private LocalDate fechaNacimiento;
-
+    private String ubicacion;
     // Getters y setters
 
     public String getPrimerNombre() {
@@ -49,6 +49,14 @@ public class PersonaDTO {
 
     public void setNumeroIdentificacion(String numeroIdentificacion) {
         this.numeroIdentificacion = numeroIdentificacion;
+    }
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
     }
 
     public LocalDate getFechaNacimiento() {

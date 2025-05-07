@@ -68,6 +68,10 @@ public class ScheduledTasks {
                     	logger.info(LatLng + " - {}", dateTimeFormatter.format(LocalDateTime.now()));
                     	
                     	coorXper = ICoordenadaRepository.getCoordenadaXPersona(persona.getId());
+						if(coorXper.getLongitud().equals(coorXper.get)){
+
+						}
+
                     	if(coorXper == null) {
                     		ICoordenadaRepository.save(new Coordenadas(persona.getId(), persona.getPrimerNombre(),
 									Double.parseDouble(coor[0].toString()),

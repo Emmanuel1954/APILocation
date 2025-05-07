@@ -26,5 +26,8 @@ public class CoordenadasServiceImpl {
 		return  ICoordenadaRepository.findAll(pageable).getContent();
 	}
 
+	public Coordenadas consultarcordenada(int id) {
+		return ICoordenadaRepository.findById(id);
+	}
 }
 

@@ -59,6 +59,7 @@ public class PersonaService {
         persona.setNumeroIdentificacion(personaDTO.getNumeroIdentificacion());
         persona.setFechaNacimiento(personaDTO.getFechaNacimiento());
         persona.calcularEdad();
+        persona.setUbicacion(personaDTO.getUbicacion());
 
         Persona savedPersona = personaRepository.save(persona);
         createUserForPersona(savedPersona);
@@ -76,6 +77,7 @@ public class PersonaService {
                     persona.setNumeroIdentificacion(personaDTO.getNumeroIdentificacion());
                     persona.setFechaNacimiento(personaDTO.getFechaNacimiento());
                     persona.calcularEdad();
+                    persona.setUbicacion(personaDTO.getUbicacion());
                     return personaRepository.save(persona);
                 })
                 .orElse(null);

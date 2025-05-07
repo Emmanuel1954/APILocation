@@ -5,10 +5,7 @@ import com.api.demo.services.CoordenadasServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
@@ -29,5 +26,9 @@ public class CoordenadasController {
 	public List<Coordenadas> consultarAllCoordenadas(Pageable pageable) {
 		return coordenadaService.consultarAllCoordenadas(pageable);
 	}
-	
+	@CrossOrigin(origins = "http://localhost")
+	@GetMapping ("/{id}")
+	public Coordenadas consultarCoordenada(@PathVariable int id) {
+		return coordenadaService.consultarcordenada(id);
+	}
 }
