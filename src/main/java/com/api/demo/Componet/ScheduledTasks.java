@@ -24,12 +24,12 @@ public class ScheduledTasks {
     // ========= INYECCIÓN DE DEPENDENCIAS ==========
  	@Autowired
  	private PersonaRepository IPersonaRepository;
- 	
+
  	@Autowired
 	@Qualifier("ICoordenadasRepository")
 	private CoordenadasRepository ICoordenadaRepository;
- 	
-    
+
+
     @Scheduled(fixedRate = 10000)
     public void scheduleTaskWithFixedRate() {
         logger.info("*************Fixed Rate Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()) );
@@ -51,7 +51,7 @@ public class ScheduledTasks {
         logger.info("-----------Fixed Rate Task with Initial Delay :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
     }
 
-    
+
     @Scheduled(cron = "*/30 *  * * * ?")
     public void scheduleTaskWithCronExpression() {
         logger.info("Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
@@ -66,22 +66,25 @@ public class ScheduledTasks {
         				String LatLng = geocoder.getLatLng(persona.getUbicacion());
         				String[] coor = LatLng.split(",");
                     	logger.info(LatLng + " - {}", dateTimeFormatter.format(LocalDateTime.now()));
-                    	
                     	coorXper = ICoordenadaRepository.getCoordenadaXPersona(persona.getId());
-						if(coorXper.getLongitud().equals(coorXper.get)){
-
-						}
 
                     	if(coorXper == null) {
                     		ICoordenadaRepository.save(new Coordenadas(persona.getId(), persona.getPrimerNombre(),
 									Double.parseDouble(coor[0].toString()),
 									Double.parseDouble(coor[1].toString())));
                     	}else if(coorXper.id>0) {
-                    		ICoordenadaRepository.save(new Coordenadas(coorXper.id,persona.getId(), persona.getPrimerNombre(),
+							Coordenadas newcoor = new Coordenadas(coorXper.id,persona.getId(), persona.getPrimerNombre(),
 									Double.parseDouble(coor[0].toString()),
-									Double.parseDouble(coor[1].toString())));
+									Double.parseDouble(coor[1].toString()));
+							if(coorXper.getLongitud_anterior() != newcoor.getLongitud()){
+								newcoor.setLongitud_anterior(coorXper.getLongitud());
+								newcoor.setlatitud_anterior(coorXper.getLatitud());
+							}
+                    		ICoordenadaRepository.save(newcoor);
+
+
                     	}
-                    	
+
 					}
         		}
         	}
