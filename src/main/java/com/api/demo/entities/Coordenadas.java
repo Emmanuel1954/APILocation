@@ -18,20 +18,20 @@ public class Coordenadas implements Serializable{
 	@Column(name = "id_coordenada")
 	public int id;
 	@Column(name="persona")
-	public int persona;
+	public long persona;
 	@Column(name="marca")
 	public String marca;
 	@Column(name="longitud")
-	public double longitud;
+	public Double longitud;
 	@Column(name="latitud")
-	public double latitud;
+	public Double latitud;
 	@Column (name="longitud_anterior")
-	public double longitud_anterior;
+	public Double longitud_anterior;
     @Column (name="latitud_anterior")
-	public double latitud_anterior;
+	public Double latitud_anterior;
 	public Coordenadas() {}
 	
-	public Coordenadas(int persona, String marca, double longitud, double latitud) {
+	public Coordenadas(long persona, String marca, double longitud, double latitud) {
 		this.persona = persona;
 		this.marca = marca;
 		this.longitud = longitud;
@@ -39,7 +39,7 @@ public class Coordenadas implements Serializable{
 
 	}
 
-	public Coordenadas(int id, int persona, String marca, double longitud, double latitud) {
+	public Coordenadas(int id, long persona, String marca, double longitud, double latitud) {
 		this.id = id;
 		this.persona = persona;
 		this.marca = marca;
@@ -48,7 +48,7 @@ public class Coordenadas implements Serializable{
 
 	}
 
-	public Coordenadas(int persona, String marca, double longitud, double latitud,double latitud_anterior, double longitud_anterior) {
+	public Coordenadas(long persona, String marca, double longitud, double latitud,double latitud_anterior, double longitud_anterior) {
 		this.persona = persona;
 		this.marca = marca;
 		this.longitud = longitud;
@@ -65,11 +65,11 @@ public class Coordenadas implements Serializable{
 		this.id = id;
 	}
 
-	public int getPersona() {
+	public long getPersona() {
 		return persona;
 	}
 
-	public void setPersona(int persona) {
+	public void setPersona(long persona) {
 		this.persona = persona;
 	}
 
@@ -106,6 +106,7 @@ public class Coordenadas implements Serializable{
 	}
 
 	public void setlatitud_anterior(double latitud) {
+		this.latitud_anterior = latitud;
 	}
 
 	public double getLatitud_anterior() {

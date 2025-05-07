@@ -30,66 +30,63 @@ public class ScheduledTasks {
 	private CoordenadasRepository ICoordenadaRepository;
 
 
-    @Scheduled(fixedRate = 10000)
-    public void scheduleTaskWithFixedRate() {
-        logger.info("*************Fixed Rate Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()) );
-    }
 
-    @Scheduled(fixedDelay = 5000)
-    public void scheduleTaskWithFixedDelay() {
-        logger.info("++++++++++++Fixed Delay Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
-        try {
-            TimeUnit.SECONDS.sleep(5);
-        } catch (InterruptedException ex) {
-            logger.error("Ran into an error {}", ex);
-            throw new IllegalStateException(ex);
-        }
-    }
+	@Scheduled(cron = "*/30 * * * * ?")
+	public void scheduleTaskWithCronExpression() {
+		logger.info("Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
 
-    @Scheduled(fixedRate = 2000, initialDelay = 5000)
-    public void scheduleTaskWithInitialDelay() {
-        logger.info("-----------Fixed Rate Task with Initial Delay :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
-    }
+		try {
+			List<Persona> listPersonas = IPersonaRepository.findAll();
+			if (listPersonas != null && !listPersonas.isEmpty()) {
+				Geocoder geocoder = new Geocoder();
 
+				for (Persona persona : listPersonas) {
+					String latLng = geocoder.getLatLng(persona.getUbicacion());
+					String[] coor = latLng.split(",");
+					double nuevaLatitud = Double.parseDouble(coor[0]);
+					double nuevaLongitud = Double.parseDouble(coor[1]);
 
-    @Scheduled(cron = "*/30 *  * * * ?")
-    public void scheduleTaskWithCronExpression() {
-        logger.info("Cron Task :: Execution Time - {}", dateTimeFormatter.format(LocalDateTime.now()));
-        try
-        {
-        	List<Persona> listPersonas = IPersonaRepository.findAll();
-        	if(listPersonas !=null) {
-        		if(listPersonas.size()>0) {
-        			Geocoder geocoder = new Geocoder();
-        			Coordenadas coorXper = new Coordenadas();
-        			for (Persona persona : listPersonas) {
-        				String LatLng = geocoder.getLatLng(persona.getUbicacion());
-        				String[] coor = LatLng.split(",");
-                    	logger.info(LatLng + " - {}", dateTimeFormatter.format(LocalDateTime.now()));
-                    	coorXper = ICoordenadaRepository.getCoordenadaXPersona(persona.getId());
+					logger.info(latLng + " - {}", dateTimeFormatter.format(LocalDateTime.now()));
 
-                    	if(coorXper == null) {
-                    		ICoordenadaRepository.save(new Coordenadas(persona.getId(), persona.getPrimerNombre(),
-									Double.parseDouble(coor[0].toString()),
-									Double.parseDouble(coor[1].toString())));
-                    	}else if(coorXper.id>0) {
-							Coordenadas newcoor = new Coordenadas(coorXper.id,persona.getId(), persona.getPrimerNombre(),
-									Double.parseDouble(coor[0].toString()),
-									Double.parseDouble(coor[1].toString()));
-							if(coorXper.getLongitud_anterior() != newcoor.getLongitud()){
-								newcoor.setLongitud_anterior(coorXper.getLongitud());
-								newcoor.setlatitud_anterior(coorXper.getLatitud());
-							}
-                    		ICoordenadaRepository.save(newcoor);
+					Coordenadas coorXper = ICoordenadaRepository.getCoordenadaXPersona(persona.getId());
 
+					if (coorXper == null) {
+						// No existía registro previo, se crea uno nuevo
+						Coordenadas nueva = new Coordenadas(
+								persona.getId(),
+								persona.getPrimerNombre(),
+								nuevaLatitud,
+								nuevaLongitud
+						);
+						ICoordenadaRepository.save(nueva);
+					} else {
+						Coordenadas nueva = new Coordenadas(
+								coorXper.id,
+								persona.getId(),
+								persona.getPrimerNombre(),
+								nuevaLatitud,
+								nuevaLongitud
+						);
 
-                    	}
+						double epsilon = 0.000001;
+						boolean latitudCambiada = Math.abs(coorXper.getLatitud() - nuevaLatitud) > epsilon;
+						boolean longitudCambiada = Math.abs(coorXper.getLongitud() - nuevaLongitud) > epsilon;
 
+						if (latitudCambiada || longitudCambiada) {
+							nueva.setlatitud_anterior(coorXper.getLatitud());
+							nueva.setLongitud_anterior(coorXper.getLongitud());
+						} else {
+							nueva.setlatitud_anterior(coorXper.getLatitud_anterior());
+							nueva.setLongitud_anterior(coorXper.getLongitud_anterior());
+						}
+
+						ICoordenadaRepository.save(nueva);
 					}
-        		}
-        	}
-        }catch (Exception e) {
-        	System.out.println(e.getMessage());
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("Error en la tarea programada: " + e.getMessage());
+			e.printStackTrace();
 		}
-    }
+	}
 }

@@ -93,7 +93,7 @@ public class PersonaService {
         String password = generatePassword();
         String apikey = generateApiKey();
 
-        UsuarioId usuarioId = new UsuarioId((long)persona.getId(), login);
+        UsuarioId usuarioId = new UsuarioId(persona.getId(), login);
         usuario.setId(usuarioId);
         usuario.setPersona(persona);
         usuario.setPassword(password);
