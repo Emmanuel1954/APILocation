@@ -1,29 +1,17 @@
 package com.api.demo.config.model;
 
-import java.io.Serializable;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-public class JwtResponse implements Serializable {
+@Schema(description = "Respuesta de autenticación con el token JWT generado.")
+public class JwtResponse {
+	@Schema(description = "Token de autenticación JWT. Incluye el prefijo 'Bearer '.", example = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImV4cCI6MTY3ODU2NzA5OH0....")
+	private String jwttoken;
 
-	private static final long serialVersionUID = -8091879091924046844L;
-	private final String jwttoken;
-
-
-
-	
-	
 	public JwtResponse(String jwttoken) {
 		this.jwttoken = jwttoken;
-		
 	}
 
-	public String getToken() {
-		return this.jwttoken;
-	}
-
-	public String getJwttoken() {
-		return jwttoken;
-	}
-
-	
-	
+	// Getter
+	public String getJwttoken() { return jwttoken; }
+	public void setJwttoken(String jwttoken) { this.jwttoken = jwttoken; } // Añadir setter también
 }
